@@ -1,7 +1,10 @@
 import json
 import unittest
+from io import StringIO
+from unittest.mock import patch
 
 from manufacturing_pipeline.ingestion.kafka_topic_validator import (
+    main,
     validate_messages,
     validate_payload,
 )
@@ -45,6 +48,24 @@ class KafkaTopicValidatorTest(unittest.TestCase):
 
         self.assertEqual(result.messages_checked, 1)
         self.assertEqual(result.invalid_messages, 1)
+
+    def test_main_fails_when_expected_message_count_is_not_available(self):
+        argv = [
+            "kafka_topic_validator",
+            "--dataset",
+            "numeric",
+            "--limit",
+            "2",
+        ]
+
+        with patch("sys.argv", argv), patch("sys.stdout", new_callable=StringIO), patch(
+            "manufacturing_pipeline.ingestion.kafka_topic_validator.consume_topic",
+            return_value=[],
+        ):
+            with self.assertRaises(SystemExit) as context:
+                main()
+
+        self.assertEqual(str(context.exception), "Expected 2 messages, found 0")
 
 
 if __name__ == "__main__":

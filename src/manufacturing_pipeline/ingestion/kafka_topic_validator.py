@@ -171,8 +171,10 @@ def main() -> None:
     result = validate_messages(raw_messages, topic=topic, expected_dataset=args.dataset)
 
     print(json.dumps(result.__dict__, indent=2))
-    if result.messages_checked == 0:
-        raise SystemExit("No messages found to validate")
+    if result.messages_checked < args.limit:
+        raise SystemExit(
+            f"Expected {args.limit} messages, found {result.messages_checked}"
+        )
     if result.invalid_messages:
         raise SystemExit(f"Found {result.invalid_messages} invalid messages")
 

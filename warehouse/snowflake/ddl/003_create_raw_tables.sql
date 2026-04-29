@@ -1,0 +1,59 @@
+-- Infer raw table schemas from the staged Bosch sample CSV files.
+-- Upload samples with 002_put_sample_files.sql before running this script.
+
+CREATE OR REPLACE TABLE MANUFACTURING_DEFECTS.RAW.TRAIN_NUMERIC
+  USING TEMPLATE (
+    SELECT ARRAY_AGG(
+      OBJECT_CONSTRUCT(
+        'COLUMN_NAME', COLUMN_NAME,
+        'TYPE', TYPE,
+        'NULLABLE', NULLABLE
+      )
+    ) WITHIN GROUP (ORDER BY ORDER_ID)
+    FROM TABLE(
+      INFER_SCHEMA(
+        LOCATION => '@MANUFACTURING_DEFECTS.RAW.BOSCH_SAMPLE_STAGE',
+        FILE_FORMAT => 'MANUFACTURING_DEFECTS.RAW.BOSCH_CSV_FORMAT',
+        FILES => ('train_numeric_sample.csv.gz'),
+        IGNORE_CASE => TRUE
+      )
+    )
+  );
+
+CREATE OR REPLACE TABLE MANUFACTURING_DEFECTS.RAW.TRAIN_DATE
+  USING TEMPLATE (
+    SELECT ARRAY_AGG(
+      OBJECT_CONSTRUCT(
+        'COLUMN_NAME', COLUMN_NAME,
+        'TYPE', TYPE,
+        'NULLABLE', NULLABLE
+      )
+    ) WITHIN GROUP (ORDER BY ORDER_ID)
+    FROM TABLE(
+      INFER_SCHEMA(
+        LOCATION => '@MANUFACTURING_DEFECTS.RAW.BOSCH_SAMPLE_STAGE',
+        FILE_FORMAT => 'MANUFACTURING_DEFECTS.RAW.BOSCH_CSV_FORMAT',
+        FILES => ('train_date_sample.csv.gz'),
+        IGNORE_CASE => TRUE
+      )
+    )
+  );
+
+CREATE OR REPLACE TABLE MANUFACTURING_DEFECTS.RAW.TRAIN_CATEGORICAL
+  USING TEMPLATE (
+    SELECT ARRAY_AGG(
+      OBJECT_CONSTRUCT(
+        'COLUMN_NAME', COLUMN_NAME,
+        'TYPE', TYPE,
+        'NULLABLE', NULLABLE
+      )
+    ) WITHIN GROUP (ORDER BY ORDER_ID)
+    FROM TABLE(
+      INFER_SCHEMA(
+        LOCATION => '@MANUFACTURING_DEFECTS.RAW.BOSCH_SAMPLE_STAGE',
+        FILE_FORMAT => 'MANUFACTURING_DEFECTS.RAW.BOSCH_CSV_FORMAT',
+        FILES => ('train_categorical_sample.csv.gz'),
+        IGNORE_CASE => TRUE
+      )
+    )
+  );

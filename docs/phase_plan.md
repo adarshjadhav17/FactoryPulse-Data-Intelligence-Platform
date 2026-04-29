@@ -53,6 +53,7 @@ PYTHONPATH=src python -m unittest discover -s tests
 ```bash
 scripts/check_local_env.sh
 scripts/start_kafka.sh
+scripts/reset_kafka_topics.sh
 scripts/produce_to_kafka.sh numeric 10
 scripts/check_kafka_offsets.sh bosch.train.numeric
 scripts/validate_kafka_topic.sh numeric 10
@@ -67,6 +68,9 @@ scripts/run_phase3_kafka_check.sh
 
 If Docker Compose is unavailable, the scripts fall back to plain `docker run` and
 `docker exec` for the local Kafka container.
+
+The smoke test resets the three local Phase 3 topics before producing so repeated
+runs validate the messages from the current run rather than older topic data.
 
 ## Progress Check
 
@@ -85,6 +89,19 @@ Test:
 
 - Load a small sample file first.
 - Validate row counts and column counts in Snowflake.
+
+Current implementation:
+
+- `warehouse/snowflake/ddl/001_create_raw_objects.sql` creates the raw database,
+  schema, CSV file format, internal stage, and load audit table.
+- `warehouse/snowflake/ddl/002_put_sample_files.sql` stages generated sample
+  CSV files for schema inference and loading.
+- `warehouse/snowflake/ddl/003_create_raw_tables.sql` infers wide raw table
+  schemas from staged sample CSV files.
+- `warehouse/snowflake/ddl/004_copy_sample_data.sql` copies generated sample
+  CSVs into Snowflake.
+- `warehouse/snowflake/ddl/005_validate_raw_load.sql` checks row counts,
+  distinct IDs, null IDs, and ID alignment across the three raw tables.
 
 ## Phase 5: Airflow Orchestration
 

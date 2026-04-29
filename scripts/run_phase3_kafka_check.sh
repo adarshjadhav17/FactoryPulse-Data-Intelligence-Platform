@@ -6,6 +6,7 @@ DATE_LIMIT="${2:-3}"
 CATEGORICAL_LIMIT="${3:-3}"
 
 scripts/start_kafka.sh
+scripts/reset_kafka_topics.sh
 
 scripts/produce_to_kafka.sh numeric "${NUMERIC_LIMIT}"
 scripts/produce_to_kafka.sh date "${DATE_LIMIT}"
@@ -24,4 +25,3 @@ echo "-----------------------"
 scripts/validate_kafka_topic.sh numeric "${NUMERIC_LIMIT}"
 scripts/validate_kafka_topic.sh date "${DATE_LIMIT}"
 scripts/validate_kafka_topic.sh categorical "${CATEGORICAL_LIMIT}"
-
