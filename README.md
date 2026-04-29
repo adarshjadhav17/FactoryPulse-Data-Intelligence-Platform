@@ -60,10 +60,7 @@ Implemented:
 - Phase 4: Snowflake raw database/stage/table/load/validation SQL
 - Phase 5: Airflow DAG definition for local pipeline orchestration
 - Phase 6: dbt project with staging models, joined mart, and schema tests
-
-Planned next:
-
-- Phase 7: data quality reconciliation checks
+- Phase 7: local and Snowflake data quality reconciliation checks
 
 ## Local Setup
 
@@ -152,6 +149,8 @@ It orchestrates the current sample pipeline:
 2. Run the Python unit test suite.
 3. Run the Kafka smoke check.
 4. Load and validate Snowflake raw sample tables.
+5. Build dbt staging views and the feature mart.
+6. Run data quality reconciliation checks.
 
 Airflow is kept in `requirements-airflow.txt` so the default local test
 environment stays lightweight. Install it only when running the DAG locally.
@@ -183,6 +182,18 @@ scripts/run_dbt_build.sh
 
 The committed `warehouse/dbt/profiles.yml` reads Snowflake credentials from
 environment variables, so secrets stay in your ignored local `.env`.
+
+## Data Quality
+
+Run local and Snowflake reconciliation checks:
+
+```bash
+scripts/run_data_quality_checks.sh
+```
+
+The checks compare generated local sample metadata with Snowflake raw tables and
+the dbt mart: row counts, column counts, duplicate/null IDs, ID alignment, and
+response distribution.
 
 ## Phase Plan
 

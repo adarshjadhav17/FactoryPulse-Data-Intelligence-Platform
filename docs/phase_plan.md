@@ -115,8 +115,8 @@ Test:
 Current implementation:
 
 - `pipelines/airflow/dags/manufacturing_defect_pipeline.py` defines a manual
-  Airflow DAG that runs sample profiling, unit tests, the Kafka smoke check, and
-  Snowflake raw sample loading.
+  Airflow DAG that runs sample profiling, unit tests, the Kafka smoke check,
+  Snowflake raw sample loading, dbt build, and data quality checks.
 - `requirements-airflow.txt` keeps Airflow dependencies separate from the
   default lightweight local test environment.
 
@@ -150,3 +150,10 @@ Test:
 
 - Run checks on sample and loaded warehouse data.
 - Force a bad sample to confirm checks fail.
+
+Current implementation:
+
+- `src/manufacturing_pipeline/validation/data_quality.py` runs structured
+  pass/fail checks across local sample metadata, Snowflake raw tables, and the
+  dbt feature mart.
+- `scripts/run_data_quality_checks.sh` executes the checks from the repo root.

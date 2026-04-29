@@ -15,7 +15,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 with DAG(
     dag_id="manufacturing_defect_sample_pipeline",
-    description="Profile Bosch samples, validate Kafka ingestion, and load Snowflake raw tables.",
+    description="Profile Bosch samples, validate Kafka, load Snowflake, build dbt, and run quality checks.",
     start_date=datetime(2026, 1, 1),
     schedule=None,
     catchup=False,
@@ -47,7 +47,20 @@ with DAG(
         cwd=str(PROJECT_ROOT),
     )
 
+    build_dbt_models = BashOperator(
+        task_id="build_dbt_models",
+        bash_command="PYTHONPATH=src scripts/run_dbt_build.sh",
+        cwd=str(PROJECT_ROOT),
+    )
+
+    run_data_quality_checks = BashOperator(
+        task_id="run_data_quality_checks",
+        bash_command="PYTHONPATH=src scripts/run_data_quality_checks.sh",
+        cwd=str(PROJECT_ROOT),
+    )
+
     finish = EmptyOperator(task_id="finish")
 
     start >> profile_samples >> run_unit_tests
-    run_unit_tests >> kafka_smoke_check >> load_snowflake_raw >> finish
+    run_unit_tests >> kafka_smoke_check >> load_snowflake_raw
+    load_snowflake_raw >> build_dbt_models >> run_data_quality_checks >> finish

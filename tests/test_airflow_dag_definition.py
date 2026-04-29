@@ -40,6 +40,8 @@ class AirflowDagDefinitionTest(unittest.TestCase):
             "run_unit_tests": "PYTHONPATH=src python -m unittest discover -s tests",
             "kafka_smoke_check": "PYTHONPATH=src scripts/run_phase3_kafka_check.sh",
             "load_snowflake_raw": "PYTHONPATH=src scripts/run_snowflake_raw_load.sh",
+            "build_dbt_models": "PYTHONPATH=src scripts/run_dbt_build.sh",
+            "run_data_quality_checks": "PYTHONPATH=src scripts/run_data_quality_checks.sh",
         }
 
         for variable_name, command in expected_commands.items():
@@ -60,7 +62,11 @@ class AirflowDagDefinitionTest(unittest.TestCase):
 
         self.assertIn("start >> profile_samples >> run_unit_tests", source)
         self.assertIn(
-            "run_unit_tests >> kafka_smoke_check >> load_snowflake_raw >> finish",
+            "run_unit_tests >> kafka_smoke_check >> load_snowflake_raw",
+            source,
+        )
+        self.assertIn(
+            "load_snowflake_raw >> build_dbt_models >> run_data_quality_checks >> finish",
             source,
         )
 
