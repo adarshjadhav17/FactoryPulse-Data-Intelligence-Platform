@@ -58,10 +58,10 @@ Implemented:
 - Phase 2: CSV profiling and sample generation
 - Phase 3: Kafka producer, local Kafka smoke test, and topic validation
 - Phase 4: Snowflake raw database/stage/table/load/validation SQL
+- Phase 5: Airflow DAG definition for local pipeline orchestration
 
 Planned next:
 
-- Phase 5: Airflow DAGs for orchestration
 - Phase 6: dbt staging and mart models
 - Phase 7: data quality reconciliation checks
 
@@ -137,6 +137,24 @@ scripts/run_snowflake_raw_load.sh
 
 The script creates raw Snowflake objects, stages generated sample CSVs, infers
 wide raw tables, loads the samples, and prints validation query results.
+
+## Airflow Orchestration
+
+The Airflow DAG is defined at:
+
+```text
+pipelines/airflow/dags/manufacturing_defect_pipeline.py
+```
+
+It orchestrates the current sample pipeline:
+
+1. Generate profiling outputs and sample CSVs.
+2. Run the Python unit test suite.
+3. Run the Kafka smoke check.
+4. Load and validate Snowflake raw sample tables.
+
+Airflow is kept in `requirements-airflow.txt` so the default local test
+environment stays lightweight. Install it only when running the DAG locally.
 
 ## Phase Plan
 

@@ -112,6 +112,14 @@ Test:
 - Run DAG tasks manually.
 - Validate task logs and output row counts.
 
+Current implementation:
+
+- `pipelines/airflow/dags/manufacturing_defect_pipeline.py` defines a manual
+  Airflow DAG that runs sample profiling, unit tests, the Kafka smoke check, and
+  Snowflake raw sample loading.
+- `requirements-airflow.txt` keeps Airflow dependencies separate from the
+  default lightweight local test environment.
+
 ## Phase 6: dbt Models
 
 Create staging models and mart tables joining numeric, date, categorical, and response data by `Id`.
