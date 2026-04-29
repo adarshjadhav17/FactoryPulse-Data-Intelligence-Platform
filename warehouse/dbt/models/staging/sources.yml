@@ -1,0 +1,32 @@
+version: 2
+
+sources:
+  - name: raw_bosch
+    database: "{{ env_var('SNOWFLAKE_DATABASE', 'MANUFACTURING_DEFECTS') }}"
+    schema: RAW
+    description: Raw Bosch manufacturing sample tables loaded from local CSV files.
+    tables:
+      - name: TRAIN_NUMERIC
+        description: Numeric Bosch features and the Response target.
+        columns:
+          - name: ID
+            tests:
+              - not_null
+              - unique
+          - name: RESPONSE
+            tests:
+              - not_null
+      - name: TRAIN_DATE
+        description: Date/time Bosch station features.
+        columns:
+          - name: ID
+            tests:
+              - not_null
+              - unique
+      - name: TRAIN_CATEGORICAL
+        description: Categorical Bosch station features.
+        columns:
+          - name: ID
+            tests:
+              - not_null
+              - unique

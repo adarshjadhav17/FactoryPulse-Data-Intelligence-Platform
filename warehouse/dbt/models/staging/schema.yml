@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: stg_bosch_numeric
+    description: Staging model for numeric Bosch features and defect target.
+    columns:
+      - name: defect_id
+        tests:
+          - not_null
+          - unique
+      - name: defect_response
+        tests:
+          - not_null
+  - name: stg_bosch_date
+    description: Staging model for selected date/time Bosch features.
+    columns:
+      - name: defect_id
+        tests:
+          - not_null
+          - unique
+  - name: stg_bosch_categorical
+    description: Staging model for selected categorical Bosch features.
+    columns:
+      - name: defect_id
+        tests:
+          - not_null
+          - unique

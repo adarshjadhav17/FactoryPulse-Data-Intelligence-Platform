@@ -129,6 +129,19 @@ Test:
 - Run `dbt build`.
 - Validate uniqueness and not-null tests on keys.
 
+Current implementation:
+
+- `warehouse/dbt/dbt_project.yml` defines the dbt project.
+- `warehouse/dbt/models/staging/` contains staging models for selected numeric,
+  date, and categorical raw features.
+- `warehouse/dbt/models/marts/mart_defect_features.sql` joins the staged sample
+  features by `defect_id`.
+- `warehouse/dbt/models/**/schema.yml` defines not-null, unique, and accepted
+  value tests.
+- `warehouse/dbt/macros/generate_schema_name.sql` keeps dbt output schemas named
+  exactly `STAGING` and `MARTS`.
+- `scripts/run_dbt_build.sh` runs `dbt build` with the project-local profile.
+
 ## Phase 7: Data Quality
 
 Add checks for duplicate IDs, missingness, schema drift, row-count reconciliation, and response distribution.

@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: mart_defect_features
+    description: Joined sample feature mart keyed by Bosch manufacturing row ID.
+    columns:
+      - name: defect_id
+        tests:
+          - not_null
+          - unique
+      - name: defect_response
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]

@@ -59,10 +59,10 @@ Implemented:
 - Phase 3: Kafka producer, local Kafka smoke test, and topic validation
 - Phase 4: Snowflake raw database/stage/table/load/validation SQL
 - Phase 5: Airflow DAG definition for local pipeline orchestration
+- Phase 6: dbt project with staging models, joined mart, and schema tests
 
 Planned next:
 
-- Phase 6: dbt staging and mart models
 - Phase 7: data quality reconciliation checks
 
 ## Local Setup
@@ -155,6 +155,34 @@ It orchestrates the current sample pipeline:
 
 Airflow is kept in `requirements-airflow.txt` so the default local test
 environment stays lightweight. Install it only when running the DAG locally.
+
+## dbt Models
+
+The dbt project lives in `warehouse/dbt/`.
+
+Current models:
+
+- `stg_bosch_numeric`: selected numeric features and the defect target
+- `stg_bosch_date`: selected date/time station features
+- `stg_bosch_categorical`: selected categorical station features
+- `mart_defect_features`: joined feature mart keyed by `defect_id`
+
+dbt builds staging views in `STAGING` and the joined feature mart in `MARTS`.
+
+Install dbt dependencies only when running dbt:
+
+```bash
+python -m pip install -r requirements-dbt.txt
+```
+
+Then run:
+
+```bash
+scripts/run_dbt_build.sh
+```
+
+The committed `warehouse/dbt/profiles.yml` reads Snowflake credentials from
+environment variables, so secrets stay in your ignored local `.env`.
 
 ## Phase Plan
 
