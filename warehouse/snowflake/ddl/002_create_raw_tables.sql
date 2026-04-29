@@ -1,5 +1,5 @@
 -- Infer raw table schemas from the staged Bosch sample CSV files.
--- Upload samples with 002_put_sample_files.sql before running this script.
+-- Stage samples with manufacturing_pipeline.warehouse.snowflake_runner first.
 
 CREATE OR REPLACE TABLE MANUFACTURING_DEFECTS.RAW.TRAIN_NUMERIC
   USING TEMPLATE (

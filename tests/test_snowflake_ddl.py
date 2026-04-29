@@ -12,20 +12,19 @@ class SnowflakeDdlTest(unittest.TestCase):
     def test_phase4_ddl_files_are_present(self):
         expected_files = [
             "001_create_raw_objects.sql",
-            "002_put_sample_files.sql",
-            "003_create_raw_tables.sql",
-            "004_copy_sample_data.sql",
-            "005_validate_raw_load.sql",
+            "002_create_raw_tables.sql",
+            "003_copy_sample_data.sql",
+            "004_validate_raw_load.sql",
         ]
 
         for file_name in expected_files:
             self.assertTrue((DDL_DIR / file_name).exists(), file_name)
 
     def test_raw_table_ddl_covers_all_datasets(self):
-        raw_tables_sql = (DDL_DIR / "003_create_raw_tables.sql").read_text(
+        raw_tables_sql = (DDL_DIR / "002_create_raw_tables.sql").read_text(
             encoding="utf-8"
         )
-        copy_sql = (DDL_DIR / "004_copy_sample_data.sql").read_text(encoding="utf-8")
+        copy_sql = (DDL_DIR / "003_copy_sample_data.sql").read_text(encoding="utf-8")
 
         for dataset_name in DATASETS:
             table_name = f"TRAIN_{dataset_name.upper()}"
@@ -36,7 +35,7 @@ class SnowflakeDdlTest(unittest.TestCase):
             self.assertIn(sample_file, copy_sql)
 
     def test_raw_table_ddl_uses_schema_inference(self):
-        raw_tables_sql = (DDL_DIR / "003_create_raw_tables.sql").read_text(
+        raw_tables_sql = (DDL_DIR / "002_create_raw_tables.sql").read_text(
             encoding="utf-8"
         )
 

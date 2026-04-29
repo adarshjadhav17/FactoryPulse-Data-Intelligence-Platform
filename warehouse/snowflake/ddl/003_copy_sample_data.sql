@@ -1,5 +1,5 @@
 -- Load staged sample CSVs into the raw Snowflake tables.
--- Run 002_put_sample_files.sql and 003_create_raw_tables.sql first.
+-- Run 002_create_raw_tables.sql first.
 
 TRUNCATE TABLE IF EXISTS MANUFACTURING_DEFECTS.RAW.TRAIN_NUMERIC;
 TRUNCATE TABLE IF EXISTS MANUFACTURING_DEFECTS.RAW.TRAIN_DATE;

@@ -94,14 +94,14 @@ Current implementation:
 
 - `warehouse/snowflake/ddl/001_create_raw_objects.sql` creates the raw database,
   schema, CSV file format, internal stage, and load audit table.
-- `warehouse/snowflake/ddl/002_put_sample_files.sql` stages generated sample
-  CSV files for schema inference and loading.
-- `warehouse/snowflake/ddl/003_create_raw_tables.sql` infers wide raw table
+- `warehouse/snowflake/ddl/002_create_raw_tables.sql` infers wide raw table
   schemas from staged sample CSV files.
-- `warehouse/snowflake/ddl/004_copy_sample_data.sql` copies generated sample
+- `warehouse/snowflake/ddl/003_copy_sample_data.sql` copies generated sample
   CSVs into Snowflake.
-- `warehouse/snowflake/ddl/005_validate_raw_load.sql` checks row counts,
+- `warehouse/snowflake/ddl/004_validate_raw_load.sql` checks row counts,
   distinct IDs, null IDs, and ID alignment across the three raw tables.
+- `scripts/run_snowflake_raw_load.sh` runs the raw load end to end from local
+  `.env` credentials and generated sample files.
 
 ## Phase 5: Airflow Orchestration
 

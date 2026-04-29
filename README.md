@@ -123,16 +123,20 @@ Phase 4 SQL lives in `warehouse/snowflake/ddl/`:
 
 ```text
 001_create_raw_objects.sql   # database, raw schema, file format, stage, audit table
-002_put_sample_files.sql     # PUT generated local samples to the Snowflake stage
-003_create_raw_tables.sql    # schema-inferred raw tables from staged sample files
-004_copy_sample_data.sql     # COPY staged sample CSVs into raw tables
-005_validate_raw_load.sql    # row count and ID alignment checks
+002_create_raw_tables.sql    # schema-inferred raw tables from staged sample files
+003_copy_sample_data.sql     # COPY staged sample CSVs into raw tables
+004_validate_raw_load.sql    # row count and ID alignment checks
 ```
 
-Run the scripts in order after generating local samples. Snowflake requires
-absolute local paths for `PUT`, so replace the placeholder path in
-`002_put_sample_files.sql` with your repository path before running it in
-SnowSQL.
+Run the raw load after generating local samples and filling in local Snowflake
+credentials in `.env`:
+
+```bash
+scripts/run_snowflake_raw_load.sh
+```
+
+The script creates raw Snowflake objects, stages generated sample CSVs, infers
+wide raw tables, loads the samples, and prints validation query results.
 
 ## Phase Plan
 
