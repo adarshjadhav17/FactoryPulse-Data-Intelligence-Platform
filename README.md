@@ -8,7 +8,7 @@ quality checks.
 
 ## Why This Project Matters
 
-Manufacturing defect data is wide, sparse, and operationally messy. The mmachine
+Manufacturing defect data is wide, sparse, and operationally messy. The machine
 dataset used here spans **three multi-GB CSV files** with thousands of production
 line features. This project turns that raw local data into a reproducible
 warehouse-backed pipeline with streaming simulation, orchestration,
