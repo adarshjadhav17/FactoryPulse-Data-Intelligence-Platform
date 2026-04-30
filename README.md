@@ -6,10 +6,16 @@ streams with Kafka, lands raw data in Snowflake, orchestrates the sample
 pipeline with Airflow, transforms data with dbt, and validates outputs with data
 quality checks.
 
-## Project Goal
+## Why This Project Matters
 
-Build a readable, reproducible data platform that shows practical data
-engineering work:
+Manufacturing defect data is wide, sparse, and operationally messy. The Bosch
+dataset used here spans **three multi-GB CSV files** with thousands of production
+line features. This project turns that raw local data into a reproducible
+warehouse-backed pipeline with streaming simulation, orchestration,
+transformations, and quality gates.
+
+The goal is not just to load files. The goal is to demonstrate the engineering
+work expected in a real analytics platform:
 
 - Profile multi-GB manufacturing source files without committing raw data.
 - Generate small local samples for development and testing.
@@ -19,6 +25,20 @@ engineering work:
 - Orchestrate the sample pipeline with Airflow.
 - Transform raw data into a dbt feature mart.
 - Reconcile local samples, raw warehouse data, and modeled outputs.
+
+## What This Demonstrates
+
+- **Large-file handling:** works with Bosch source files over 2 GB each while
+  keeping GitHub clean.
+- **Streaming simulation:** publishes sampled manufacturing rows to Kafka topics
+  for numeric, date, and categorical feeds.
+- **Warehouse loading:** creates Snowflake raw objects, stages files, infers wide
+  schemas, and loads sample data.
+- **Analytics modeling:** builds dbt staging views and a joined mart keyed by
+  manufacturing row ID.
+- **Orchestration:** provides an Airflow DAG for the implemented sample pipeline.
+- **Quality controls:** validates local samples, Kafka messages, raw warehouse
+  tables, dbt outputs, row counts, IDs, schemas, and response distribution.
 
 ## Pipeline Flow
 
@@ -66,14 +86,28 @@ Generated samples under `data/sample/` and profiling outputs under
 
 ## Current Status
 
-- Phase 1: repository scaffold and ignored local data areas
-- Phase 2: CSV profiling and sample generation
-- Phase 3: Kafka producer, local Kafka smoke test, and topic validation
-- Phase 4: Snowflake raw database/stage/table/load/validation SQL
-- Phase 5: Airflow DAG definition for local pipeline orchestration
-- Phase 6: dbt project with staging models, joined mart, and schema tests
-- Phase 7: local and Snowflake data quality reconciliation checks
-- Phase 8: final execution script, architecture docs, and project summary
+Implemented and verified:
+
+- **1,000-row development sample** generated from each Bosch source file.
+- **3 Kafka topics** for numeric, date, and categorical sample feeds.
+- **3 Snowflake RAW tables** loaded and reconciled.
+- **3 dbt staging views** plus **1 joined feature mart**.
+- **22 dbt models/tests executed successfully**.
+- **32 Python tests** covering profiling, Kafka, Snowflake, dbt, Airflow, data
+  quality, and project packaging.
+- **11 end-to-end quality checks** comparing local samples, Snowflake RAW, and
+  dbt MARTS outputs.
+
+Latest verified sample run:
+
+```text
+RAW numeric rows:       1,000
+RAW date rows:          1,000
+RAW categorical rows:   1,000
+Aligned IDs:            1,000
+Response distribution:  996 non-defects, 4 defects
+dbt build:              PASS=22 WARN=0 ERROR=0 SKIP=0
+```
 
 ## Local Setup
 
@@ -231,14 +265,3 @@ scripts/run_data_quality_checks.sh
 The checks compare generated local sample metadata with Snowflake raw tables and
 the dbt mart: row counts, column counts, duplicate/null IDs, ID alignment, and
 response distribution.
-
-## Phase Plan
-
-1. Project scaffold and repository layout
-2. Local data profiling and sample extraction
-3. Kafka producer for controlled row streaming
-4. Snowflake raw table design and load path
-5. Airflow DAG for orchestration
-6. dbt staging and mart models
-7. Data quality checks
-8. Final analytics output and resume documentation
