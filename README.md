@@ -2,8 +2,9 @@
 
 End-to-end data engineering project for the Bosch manufacturing defect dataset.
 The project profiles large local CSV files, simulates production-line event
-streams with Kafka, lands raw data in Snowflake, and prepares the foundation for
-Airflow orchestration, dbt transformations, and data quality checks.
+streams with Kafka, lands raw data in Snowflake, orchestrates the sample
+pipeline with Airflow, transforms data with dbt, and validates outputs with data
+quality checks.
 
 ## Project Goal
 
@@ -15,7 +16,19 @@ engineering work:
 - Publish sampled rows to Kafka topics as controlled event feeds.
 - Validate Kafka message count and schema before downstream loading.
 - Define Snowflake raw-layer objects and sample load SQL.
-- Prepare for Airflow scheduling, dbt modeling, and data quality validation.
+- Orchestrate the sample pipeline with Airflow.
+- Transform raw data into a dbt feature mart.
+- Reconcile local samples, raw warehouse data, and modeled outputs.
+
+## Pipeline Flow
+
+```text
+Bosch CSVs -> profiling/samples -> Kafka smoke feed
+           -> Snowflake RAW -> dbt STAGING -> dbt MARTS -> data quality checks
+```
+
+See [docs/architecture.md](docs/architecture.md) for the system layout and
+[docs/project_summary.md](docs/project_summary.md) for the portfolio summary.
 
 ## Dataset
 
@@ -42,17 +55,16 @@ Generated samples under `data/sample/` and profiling outputs under
 
 ```text
 .
-├── data/                  # Raw, sample, and profiling data outputs
-├── docs/                  # Architecture and phase documentation
-├── pipelines/             # Airflow DAGs and Kafka producers
+├── data/                  # Ignored local sample and profiling outputs
+├── docs/                  # Architecture, phase, and portfolio docs
+├── pipelines/             # Airflow DAGs
+├── scripts/               # Local execution and validation commands
 ├── src/                   # Reusable Python package code
-├── tests/                 # Local tests and validation checks
-└── warehouse/             # Snowflake SQL and dbt models
+├── tests/                 # Unit and structural tests
+└── warehouse/             # Snowflake SQL and dbt project
 ```
 
 ## Current Status
-
-Implemented:
 
 - Phase 1: repository scaffold and ignored local data areas
 - Phase 2: CSV profiling and sample generation
@@ -61,13 +73,20 @@ Implemented:
 - Phase 5: Airflow DAG definition for local pipeline orchestration
 - Phase 6: dbt project with staging models, joined mart, and schema tests
 - Phase 7: local and Snowflake data quality reconciliation checks
+- Phase 8: final execution script, architecture docs, and project summary
 
 ## Local Setup
 
-Install Python dependencies:
+Install base Python dependencies:
 
 ```bash
 python -m pip install -r requirements.txt
+```
+
+Install dbt dependencies when running the full local sample pipeline:
+
+```bash
+python -m pip install -r requirements-dbt.txt
 ```
 
 Place the Bosch CSV files in the repository root:
@@ -82,6 +101,24 @@ Generate development samples and profiling metadata:
 
 ```bash
 scripts/run_profile.sh 1000
+```
+
+## Run The Local Sample Pipeline
+
+After installing base and dbt dependencies, placing the Bosch CSVs in the repo
+root, and filling in `.env`, run:
+
+```bash
+scripts/run_local_pipeline.sh
+```
+
+This profiles source files, regenerates samples, runs unit tests, loads
+Snowflake raw tables, builds dbt models, and runs data quality checks.
+
+Kafka requires Docker, so it is opt-in for the all-in-one command:
+
+```bash
+RUN_KAFKA=1 scripts/run_local_pipeline.sh
 ```
 
 ## Check Progress

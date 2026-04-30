@@ -7,12 +7,10 @@
 │   ├── raw/               # Ignored local raw data area
 │   ├── sample/            # Small generated samples for testing
 │   └── profiling/         # Profiling reports and summaries
-├── docs/                  # Project notes and phase docs
+├── docs/                  # Architecture, summary, and phase docs
 ├── pipelines/
-│   ├── airflow/
-│   │   └── dags/          # Airflow DAG definitions
-│   └── kafka/
-│       └── producers/     # Kafka producer code
+│   └── airflow/
+│       └── dags/          # Airflow DAG definitions
 ├── scripts/               # Utility scripts and local commands
 ├── src/
 │   └── manufacturing_pipeline/
@@ -20,7 +18,7 @@
 │       ├── profiling/     # Data profiling logic
 │       ├── utils/         # Common utilities
 │       └── validation/    # Data validation helpers
-├── tests/                 # Local validation tests
+├── tests/                 # Unit and structural tests
 └── warehouse/
     ├── dbt/
     │   └── models/

@@ -157,3 +157,15 @@ Current implementation:
   pass/fail checks across local sample metadata, Snowflake raw tables, and the
   dbt feature mart.
 - `scripts/run_data_quality_checks.sh` executes the checks from the repo root.
+
+## Phase 8: Final Packaging
+
+Make the project understandable and runnable from GitHub.
+
+Current implementation:
+
+- `scripts/run_local_pipeline.sh` provides a single local command for the
+  implemented sample pipeline, with Kafka available through `RUN_KAFKA=1`.
+- `docs/architecture.md` describes the data flow and project layers.
+- `docs/project_summary.md` summarizes the portfolio value, implemented
+  capabilities, validation results, and GitHub hygiene choices.
