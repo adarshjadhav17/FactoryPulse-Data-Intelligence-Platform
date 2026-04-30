@@ -2,7 +2,6 @@
 
 ```text
 .
-├── config/                # Local config templates
 ├── data/
 │   ├── raw/               # Ignored local raw data area
 │   ├── sample/            # Small generated samples for testing
