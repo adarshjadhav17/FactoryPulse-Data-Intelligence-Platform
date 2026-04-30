@@ -1,6 +1,6 @@
 # Manufacturing Defect Data Platform
 
-End-to-end data engineering project for the Bosch manufacturing defect dataset.
+End-to-end data engineering project for the large manufacturing defect dataset.
 The project profiles large local CSV files, simulates production-line event
 streams with Kafka, lands raw data in Snowflake, orchestrates the sample
 pipeline with Airflow, transforms data with dbt, and validates outputs with data
@@ -8,7 +8,7 @@ quality checks.
 
 ## Why This Project Matters
 
-Manufacturing defect data is wide, sparse, and operationally messy. The Bosch
+Manufacturing defect data is wide, sparse, and operationally messy. The mmachine
 dataset used here spans **three multi-GB CSV files** with thousands of production
 line features. This project turns that raw local data into a reproducible
 warehouse-backed pipeline with streaming simulation, orchestration,
@@ -28,8 +28,7 @@ work expected in a real analytics platform:
 
 ## What This Demonstrates
 
-- **Large-file handling:** works with Bosch source files over 2 GB each while
-  keeping GitHub clean.
+- **Large-file handling:** works with source files over 2 GB each
 - **Streaming simulation:** publishes sampled manufacturing rows to Kafka topics
   for numeric, date, and categorical feeds.
 - **Warehouse loading:** creates Snowflake raw objects, stages files, infers wide
@@ -43,7 +42,7 @@ work expected in a real analytics platform:
 ## Pipeline Flow
 
 ```text
-Bosch CSVs -> profiling/samples -> Kafka smoke feed
+Machinery CSVs -> profiling/samples -> Kafka smoke feed
            -> Snowflake RAW -> dbt STAGING -> dbt MARTS -> data quality checks
 ```
 
@@ -58,9 +57,9 @@ The project uses the Bosch production-line defect data files:
 - `train_date.csv`
 - `train_categorical.csv`
 
-These files are multi-GB local source files and are intentionally ignored by git.
+These files are multi-GB local source files
 Generated samples under `data/sample/` and profiling outputs under
-`data/profiling/` are also ignored so the GitHub repo stays lightweight.
+`data/profiling/` are ignored so the GitHub repo stays lightweight.
 
 ## Stack
 
@@ -88,7 +87,7 @@ Generated samples under `data/sample/` and profiling outputs under
 
 Implemented and verified:
 
-- **1,000-row development sample** generated from each Bosch source file.
+- **100,000-row development sample** generated from each Bosch source file.
 - **3 Kafka topics** for numeric, date, and categorical sample feeds.
 - **3 Snowflake RAW tables** loaded and reconciled.
 - **3 dbt staging views** plus **1 joined feature mart**.
@@ -101,11 +100,11 @@ Implemented and verified:
 Latest verified sample run:
 
 ```text
-RAW numeric rows:       1,000
-RAW date rows:          1,000
-RAW categorical rows:   1,000
-Aligned IDs:            1,000
-Response distribution:  996 non-defects, 4 defects
+RAW numeric rows:       100,000
+RAW date rows:          100,000
+RAW categorical rows:   100,000
+Aligned IDs:            100,000
+Response distribution:  99,687 non-defects, 313 defects
 dbt build:              PASS=22 WARN=0 ERROR=0 SKIP=0
 ```
 
@@ -123,7 +122,7 @@ Install dbt dependencies when running the full local sample pipeline:
 python -m pip install -r requirements-dbt.txt
 ```
 
-Place the Bosch CSV files in the repository root:
+Place the CSV files in the repository root:
 
 ```text
 train_numeric.csv
@@ -134,12 +133,12 @@ train_categorical.csv
 Generate development samples and profiling metadata:
 
 ```bash
-scripts/run_profile.sh 1000
+scripts/run_profile.sh 100000
 ```
 
 ## Run The Local Sample Pipeline
 
-After installing base and dbt dependencies, placing the Bosch CSVs in the repo
+After installing base and dbt dependencies, placing the CSVs in the repo
 root, and filling in `.env`, run:
 
 ```bash
